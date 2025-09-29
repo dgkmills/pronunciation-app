@@ -52,7 +52,8 @@
                         <div id="general-panel" class="category-panel active">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Select a Topic</label>
                             <div id="general-topic-chips" class="flex flex-wrap gap-2">
-                                <button data-topic="Expression" class="topic-chip bg-indigo-600 text-white py-1 px-4 rounded-full text-sm">Expression</button>
+                                <!-- Changed "Expression" to "Common Phrase" for clarity -->
+                                <button data-topic="Common Phrase" class="topic-chip bg-indigo-600 text-white py-1 px-4 rounded-full text-sm">Common Phrase</button>
                                 <button data-topic="Idiom" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Idiom</button>
                                 <button data-topic="Tongue Twister" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Tongue Twister</button>
                                 <button data-topic="Famous Quote" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Famous Quote</button>
@@ -179,7 +180,7 @@
 
     <script>
         // --- IMPORTANT: PASTE YOUR WORKING, GRANDFATHERED GEMINI API KEY HERE ---
-        const GEMINI_API_KEY = 'AIzaSyCJOHpZbeKqIzkPNnypVWxAX_-o2_inp34';
+        const GEMINI_API_KEY = 'PASTE_YOUR_WORKING_API_KEY_HERE';
         // --------------------------------------------------------------------
 
         // DOM Elements
@@ -206,7 +207,7 @@
         let isListening = false;
         let currentMode = 'generate';
         let currentCategory = 'general';
-        let currentTopic = 'Expression';
+        let currentTopic = 'Common Phrase'; // Updated default topic
         let currentPoetryStyle = 'Freestyle';
         let currentAudioPlayer = new Audio();
 
@@ -351,7 +352,12 @@
 
             switch(currentCategory) {
                 case 'general':
-                    prompt = `Generate one short, clear, and easy-to-pronounce English sentence suitable for a pronunciation practice game. The topic is "${currentTopic}". The sentence should be between 8 and 15 words long. Do not add quotation marks or any other formatting. Just provide the sentence. ${varietySeed}`;
+                    // FIX: Added specific prompt for "Common Phrase" to get better examples.
+                    if (currentTopic === 'Common Phrase') {
+                        prompt = `Generate a common English phrase or sentence that is used to express an emotion (like excitement, surprise, or disappointment) or a social function (like agreeing or disagreeing). It should be suitable for practicing intonation. For example: "You've got to be kidding me!" or "That's exactly what I was thinking." Keep it between 5 and 12 words. Do not add quotation marks or any other formatting. ${varietySeed}`;
+                    } else {
+                        prompt = `Generate one short, clear, and easy-to-pronounce English sentence suitable for a pronunciation practice game. The topic is "${currentTopic}". The sentence should be between 8 and 15 words long. Do not add quotation marks or any other formatting. Just provide the sentence. ${varietySeed}`;
+                    }
                     break;
                 case 'kohsel':
                     prompt = `Generate one short, clear, professional sentence related to the "${currentTopic}" department in a manufacturing company. The sentence should be suitable for pronunciation practice. It should be between 8 and 15 words long. Do not add quotation marks. ${varietySeed}`;
@@ -361,7 +367,12 @@
                     break;
                 case 'poetry':
                     const poetryTopic = customPoetryTopicInput.value.trim() || currentTopic;
-                    prompt = `Generate a single, short, evocative line of poetry suitable for pronunciation practice. The style should be "${currentPoetryStyle}" and the theme should be "${poetryTopic}". The line should be between 6 and 15 words long. Do not add quotation marks or any other formatting. Just provide the single line of poetry.`;
+                    // FIX: Updated Haiku prompt to focus on imagery and feeling over strict syllable counts.
+                    if (currentPoetryStyle === 'Haiku') {
+                        prompt = `Generate a short, three-part poem in the style of an English haiku about "${poetryTopic}". Focus on creating a vivid image or feeling rather than a strict 5-7-5 syllable count. The poem should feature two distinct, related images. Combine the three parts into a single, flowing sentence for pronunciation practice, separating the parts with commas. For example: "An old silent pond, a frog jumps into the pond, splash, silence again." The total sentence should be concise. Do not add quotation marks. ${varietySeed}`;
+                    } else {
+                        prompt = `Generate a single, short, evocative line of poetry suitable for pronunciation practice. The style should be "${currentPoetryStyle}" and the theme should be "${poetryTopic}". The line should be between 6 and 15 words long. Do not add quotation marks or any other formatting. Just provide the single line of poetry. ${varietySeed}`;
+                    }
                     break;
             }
 
@@ -406,6 +417,7 @@
                     showError("Please generate or enter a target phrase first.");
                     return;
                 }
+                hideError();
                 recognition.start();
             }
         });
@@ -415,8 +427,12 @@
         playAudioBtn.addEventListener('click', async () => {
             const textToSpeak = targetPhraseDiv.textContent;
             if (!textToSpeak || textToSpeak.includes("to begin") || GEMINI_API_KEY.includes('PASTE_YOUR_WORKING_API_KEY_HERE')) {
+                if (GEMINI_API_KEY.includes('PASTE_YOUR_WORKING_API_KEY_HERE')) {
+                    showError("Please add your Gemini API Key to enable audio playback.");
+                }
                 return;
             }
+            hideError();
 
             playAudioBtn.innerHTML = '<svg class="animate-spin h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
             playAudioBtn.disabled = true;
@@ -500,14 +516,14 @@
             if (GEMINI_API_KEY.includes('PASTE_YOUR_WORKING_API_KEY_HERE')) {
                 showError("Cannot provide feedback without a Gemini API Key.");
                 feedbackP.textContent = "Feedback unavailable.";
-                const targetWords = target.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/);
-                const userWords = user.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/);
+                const targetWords = target.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/).filter(Boolean);
+                const userWords = user.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/).filter(Boolean);
                 let correctWords = 0;
-                targetWords.forEach(word => {
-                    if(userWords.includes(word)) correctWords++;
+                userWords.forEach(word => {
+                    if(targetWords.includes(word)) correctWords++;
                 });
-                const score = Math.round((correctWords / targetWords.length) * 100);
-                accuracyScoreP.textContent = `${isNaN(score) ? 0 : score} / 100`;
+                const score = targetWords.length > 0 ? Math.round((correctWords / targetWords.length) * 100) : 0;
+                accuracyScoreP.textContent = `${score} / 100`;
                 return;
             }
 
