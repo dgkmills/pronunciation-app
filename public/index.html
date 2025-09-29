@@ -9,7 +9,7 @@
     <link rel="manifest" href="/manifest.json">
     <style>
         body { font-family: 'Inter', sans-serif; }
-        .topic-chip { transition: all 0.2s ease-in-out; }
+        .topic-chip, .style-chip { transition: all 0.2s ease-in-out; }
         .tab-button { transition: all 0.2s ease-in-out; border-bottom: 2px solid transparent; }
         .tab-button.active { border-color: #4f46e5; color: #4f46e5; }
         .tab-panel, .category-panel { display: none; }
@@ -45,6 +45,7 @@
                             <button data-category="general" class="tab-button active">General</button>
                             <button data-category="kohsel" class="tab-button">Kohsel</button>
                             <button data-category="phonics" class="tab-button">Phonics</button>
+                            <button data-category="poetry" class="tab-button">Poetry</button>
                         </nav>
                     </div>
                     <div id="category-panels">
@@ -79,15 +80,46 @@
                                 <button data-topic="short vowel" class="topic-chip bg-indigo-600 text-white py-1 px-4 rounded-full text-sm">Short Vowel</button>
                                 <button data-topic="long vowel" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Long Vowel</button>
                                 <button data-topic="diphthongs" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Diphthongs</button>
-                                <button data-topic="consonant r" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Consonant /r/</button>
-                                <button data-topic="consonant l" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Consonant /l/</button>
-                                <button data-topic="consonant x" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Consonant /x/</button>
-                                <button data-topic="consonant s" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Consonant /s/</button>
-                                <button data-topic="consonant n" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Consonant /n/</button>
-                                <button data-topic="consonant v" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Consonant /v/</button>
-                                <button data-topic="consonant w" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Consonant /w/</button>
-                                <button data-topic="consonant blends" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Consonant Blends</button>
+                                <button data-topic="/r/" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">/r/</button>
+                                <button data-topic="/l/" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">/l/</button>
+                                <button data-topic="/s/" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">/s/</button>
+                                <button data-topic="/sh/" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">/sh/</button>
+                                <button data-topic="/ch/" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">/ch/</button>
+                                <button data-topic="/th/" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">/th/</button>
+                                <button data-topic="/n/" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">/n/</button>
+                                <button data-topic="/v/" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">/v/</button>
+                                <button data-topic="/w/" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">/w/</button>
+                                <button data-topic="blends" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Blends</button>
                                 <button data-topic="ed/s endings" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">ed /s/ Endings</button>
+                            </div>
+                        </div>
+                        <div id="poetry-panel" class="category-panel">
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">1. Select a Poetry Topic</label>
+                                <div id="poetry-topic-chips" class="flex flex-wrap gap-2">
+                                    <button data-topic="Plants" class="topic-chip bg-indigo-600 text-white py-1 px-4 rounded-full text-sm">Plants</button>
+                                    <button data-topic="Flowers" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Flowers</button>
+                                    <button data-topic="Animals" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Animals</button>
+                                    <button data-topic="Life" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Life</button>
+                                    <button data-topic="Imperfection" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Imperfection</button>
+                                    <button data-topic="Mistakes" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Mistakes</button>
+                                    <button data-topic="Learning" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Learning</button>
+                                    <button data-topic="Growth" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Growth</button>
+                                </div>
+                                <input type="text" id="custom-poetry-topic" class="mt-2 w-full p-2 border border-gray-300 rounded-md" placeholder="Or enter your own topic here">
+                            </div>
+                             <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">2. Select a Style</label>
+                                <div id="poetry-style-chips" class="flex flex-wrap gap-2">
+                                    <button data-style="Freestyle" class="style-chip bg-indigo-600 text-white py-1 px-4 rounded-full text-sm">Freestyle</button>
+                                    <button data-style="Haiku" class="style-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Haiku</button>
+                                    <button data-style="Epic" class="style-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Epic</button>
+                                    <button data-style="Sonnet" class="style-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Sonnet</button>
+                                    <button data-style="Elegy" class="style-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Elegy</button>
+                                    <button data-style="Limerick" class="style-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Limerick</button>
+                                    <button data-style="Ode" class="style-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Ode</button>
+                                    <button data-style="Ballade" class="style-chip bg-gray-200 text-gray-700 hover:bg-gray-300 py-1 px-4 rounded-full text-sm">Ballade</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -155,9 +187,6 @@
         const generatePanel = document.getElementById('generate-panel');
         const customPanel = document.getElementById('custom-panel');
         const categoryTabs = document.getElementById('category-tabs');
-        const generalPanel = document.getElementById('general-panel');
-        const kohselPanel = document.getElementById('kohsel-panel');
-        const phonicsPanel = document.getElementById('phonics-panel');
         const generatePhraseBtn = document.getElementById('generate-phrase-btn');
         const customPhraseInput = document.getElementById('custom-phrase-input');
         const targetPhraseDiv = document.getElementById('target-phrase');
@@ -169,6 +198,8 @@
         const accuracyScoreP = document.getElementById('accuracy-score');
         const feedbackP = document.getElementById('feedback');
         const errorMessageDiv = document.getElementById('error-message');
+        const customPoetryTopicInput = document.getElementById('custom-poetry-topic');
+
 
         // App State
         let recognition;
@@ -176,6 +207,7 @@
         let currentMode = 'generate';
         let currentCategory = 'general';
         let currentTopic = 'Expression';
+        let currentPoetryStyle = 'Freestyle';
         let currentAudioPlayer = new Audio();
 
 
@@ -259,17 +291,34 @@
                 panel.classList.toggle('active', panel.id === `${currentCategory}-panel`);
             });
             
-            currentTopic = document.querySelector(`#${currentCategory}-topic-chips .bg-indigo-600`).dataset.topic;
+            if (currentCategory !== 'poetry') {
+                currentTopic = document.querySelector(`#${currentCategory}-panel .topic-chip.bg-indigo-600`).dataset.topic;
+            } else {
+                // For poetry, the topic is handled separately
+                currentTopic = document.querySelector(`#poetry-topic-chips .topic-chip.bg-indigo-600`).dataset.topic;
+            }
         });
         
-        document.getElementById('general-topic-chips').addEventListener('click', (e) => handleChipClick(e));
-        document.getElementById('kohsel-topic-chips').addEventListener('click', (e) => handleChipClick(e));
-        document.getElementById('phonics-topic-chips').addEventListener('click', (e) => handleChipClick(e));
+        document.getElementById('general-topic-chips').addEventListener('click', (e) => handleChipClick(e, 'topic'));
+        document.getElementById('kohsel-topic-chips').addEventListener('click', (e) => handleChipClick(e, 'topic'));
+        document.getElementById('phonics-topic-chips').addEventListener('click', (e) => handleChipClick(e, 'topic'));
+        document.getElementById('poetry-topic-chips').addEventListener('click', (e) => handleChipClick(e, 'topic'));
+        document.getElementById('poetry-style-chips').addEventListener('click', (e) => handleChipClick(e, 'style'));
 
 
-        function handleChipClick(e) {
+        function handleChipClick(e, type) {
              if (e.target.tagName !== 'BUTTON') return;
-             currentTopic = e.target.dataset.topic;
+             
+             if (type === 'topic') {
+                currentTopic = e.target.dataset.topic;
+                // Clear custom poetry topic if a chip is clicked
+                if(e.currentTarget.id === 'poetry-topic-chips'){
+                    customPoetryTopicInput.value = '';
+                }
+             } else if (type === 'style') {
+                currentPoetryStyle = e.target.dataset.style;
+             }
+            
              e.currentTarget.querySelectorAll('button').forEach(btn => {
                  btn.classList.remove('bg-indigo-600', 'text-white');
                  btn.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
@@ -277,6 +326,14 @@
              e.target.classList.add('bg-indigo-600', 'text-white');
              e.target.classList.remove('bg-gray-200', 'text-gray-700');
         }
+        
+        customPoetryTopicInput.addEventListener('input', () => {
+            // Deselect topic chips if user types a custom topic
+            document.getElementById('poetry-topic-chips').querySelectorAll('button').forEach(btn => {
+                 btn.classList.remove('bg-indigo-600', 'text-white');
+                 btn.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+            });
+        });
 
         generatePhraseBtn.addEventListener('click', async () => {
             hideError();
@@ -289,11 +346,23 @@
             btnText.innerHTML = '<span class="loader"></span> Generating...';
             generatePhraseBtn.disabled = true;
 
-            let prompt = `Generate one short, clear, and easy-to-pronounce English sentence suitable for a pronunciation practice game. The topic is "${currentTopic}". The sentence should be between 8 and 15 words long. Do not add quotation marks or any other formatting. Just provide the sentence.`;
-            if (currentCategory === 'kohsel') {
-                prompt = `Generate one short, clear, professional sentence related to the "${currentTopic}" department in a manufacturing company. The sentence should be suitable for pronunciation practice. It should be between 8 and 15 words long. Do not add quotation marks or any other formatting. Just provide the sentence.`;
-            } else if (currentCategory === 'phonics') {
-                prompt = `Generate one short, simple English sentence for a phonics game that heavily features the sound: "${currentTopic}". The sentence should be between 6 and 12 words long, suitable for a language learner. Do not add quotation marks or any other formatting. Just provide the sentence.`;
+            let prompt;
+            const varietySeed = `To ensure variety, please provide a different response than you have recently. Your unique seed for this request is ${Math.random()}.`;
+
+            switch(currentCategory) {
+                case 'general':
+                    prompt = `Generate one short, clear, and easy-to-pronounce English sentence suitable for a pronunciation practice game. The topic is "${currentTopic}". The sentence should be between 8 and 15 words long. Do not add quotation marks or any other formatting. Just provide the sentence. ${varietySeed}`;
+                    break;
+                case 'kohsel':
+                    prompt = `Generate one short, clear, professional sentence related to the "${currentTopic}" department in a manufacturing company. The sentence should be suitable for pronunciation practice. It should be between 8 and 15 words long. Do not add quotation marks. ${varietySeed}`;
+                    break;
+                case 'phonics':
+                    prompt = `Generate one short, simple English sentence for a phonics game that heavily features the sound: "${currentTopic}". The sentence should be between 6 and 12 words long, suitable for a language learner. Do not add quotation marks. ${varietySeed}`;
+                    break;
+                case 'poetry':
+                    const poetryTopic = customPoetryTopicInput.value.trim() || currentTopic;
+                    prompt = `Generate a single, short, evocative line of poetry suitable for pronunciation practice. The style should be "${currentPoetryStyle}" and the theme should be "${poetryTopic}". The line should be between 6 and 15 words long. Do not add quotation marks or any other formatting. Just provide the single line of poetry.`;
+                    break;
             }
 
             try {
@@ -349,7 +418,7 @@
                 return;
             }
 
-            playAudioBtn.innerHTML = '<svg class="animate-spin h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+            playAudioBtn.innerHTML = '<svg class="animate-spin h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 R 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
             playAudioBtn.disabled = true;
 
             const payload = {
@@ -371,7 +440,8 @@
                 const mimeType = result.candidates?.[0]?.content?.parts?.[0]?.inlineData?.mimeType;
 
                 if (audioData && mimeType?.startsWith("audio/")) {
-                    const sampleRate = parseInt(mimeType.match(/rate=(\d+)/)[1], 10);
+                    const sampleRateMatch = mimeType.match(/rate=(\d+)/);
+                    const sampleRate = sampleRateMatch ? parseInt(sampleRateMatch[1], 10) : 24000;
                     const pcmData = base64ToArrayBuffer(audioData);
                     const pcm16 = new Int16Array(pcmData);
                     const wavBlob = pcmToWav(pcm16, sampleRate);
