@@ -178,9 +178,9 @@
     </div>
 
     <script>
-        // --- IMPORTANT: PASTE YOUR GEMINI API KEY HERE ---
-        const GEMINI_API_KEY = 'AIzaSyC4dKsNlLWyxNkPM3dEwn-F75LGhivBjQU';
-        // ---------------------------------------------------
+        // --- IMPORTANT: PASTE YOUR WORKING, GRANDFATHERED GEMINI API KEY HERE ---
+        const GEMINI_API_KEY = 'AIzaSyCJOHpZbeKqIzkPNnypVWxAX_-o2_inp34';
+        // --------------------------------------------------------------------
 
         // DOM Elements
         const modeTabs = document.getElementById('mode-tabs');
@@ -337,8 +337,8 @@
 
         generatePhraseBtn.addEventListener('click', async () => {
             hideError();
-            if (GEMINI_API_KEY.includes('YOUR_GEMINI_API_KEY')) {
-                showError("Please add your Gemini API Key at the top of the script.");
+            if (GEMINI_API_KEY.includes('PASTE_YOUR_WORKING_API_KEY_HERE')) {
+                showError("Please add your working Gemini API Key at the top of the script.");
                 return;
             }
             
@@ -414,11 +414,11 @@
 
         playAudioBtn.addEventListener('click', async () => {
             const textToSpeak = targetPhraseDiv.textContent;
-            if (!textToSpeak || textToSpeak.includes("to begin") || GEMINI_API_KEY.includes('YOUR_GEMINI_API_KEY')) {
+            if (!textToSpeak || textToSpeak.includes("to begin") || GEMINI_API_KEY.includes('PASTE_YOUR_WORKING_API_KEY_HERE')) {
                 return;
             }
 
-            playAudioBtn.innerHTML = '<svg class="animate-spin h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 R 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+            playAudioBtn.innerHTML = '<svg class="animate-spin h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
             playAudioBtn.disabled = true;
 
             const payload = {
@@ -497,7 +497,7 @@
             accuracyScoreP.textContent = '...';
             feedbackP.textContent = 'Analyzing...';
             
-            if (GEMINI_API_KEY.includes('YOUR_GEMINI_API_KEY')) {
+            if (GEMINI_API_KEY.includes('PASTE_YOUR_WORKING_API_KEY_HERE')) {
                 showError("Cannot provide feedback without a Gemini API Key.");
                 feedbackP.textContent = "Feedback unavailable.";
                 const targetWords = target.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/);
