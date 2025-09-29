@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STT Pronunciation Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- PWA Manifest Link -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#4f46e5">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .loader {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #FFF;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #mic-btn.listening span {
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .tab-button {
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease-in-out;
+        }
+        .tab-button.active {
+            border-color: #4f46e5; /* indigo-600 */
+            color: #4f46e5;
+        }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+        .topic-chip {
+            padding: 6px 16px;
+            border-radius: 9999px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            border: 1px solid transparent;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 flex items-center justify-center min-h-screen">
+    <div id="app" class="w-full max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
+        <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+            <header class="mb-6 text-center">
+                <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Pronunciation Practice</h1>
+                <p class="text-gray-500 mt-2">Test your speaking skills. Get a phrase, say it out loud, and see your score.</p>
+            </header>
+
+            <main>
+                <!-- Step 1: Get a Phrase -->
+                <div id="setup-section" class="mb-6 p-4 bg-gray-100 rounded-lg">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-3">1. Get Your Phrase</h2>
+                    
+                    <div class="border-b border-gray-200 mb-4">
+                        <nav id="tabs-container" class="-mb-px flex flex-wrap space-x-4" aria-label="Tabs">
+                            <button data-tab="ai-phrase" class="tab-button active">General Topics</button>
+                            <button data-tab="kohsel-phrase" class="tab-button">Kohsel Topics</button>
+                            <button data-tab="custom-phrase" class="tab-button">Use Your Own</button>
+                        </nav>
+                    </div>
+
+                    <div id="tab-panels-container">
+                        <div id="ai-phrase-panel" class="tab-panel active">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Select a category:</label>
+                            <div id="topic-chips" class="flex flex-wrap gap-2">
+                                <button data-topic="Common Greetings" class="topic-chip bg-indigo-600 text-white">Greetings</button>
+                                <button data-topic="Technology" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300">Technology</button>
+                                <button data-topic="Food" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300">Food</button>
+                                <button data-topic="Travel" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300">Travel</button>
+                                <button data-topic="Tongue Twister" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300">Tongue Twister</button>
+                            </div>
+                        </div>
+
+                        <div id="kohsel-phrase-panel" class="tab-panel">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Select a Department Topic:</label>
+                            <div id="kohsel-topic-chips" class="flex flex-wrap gap-2">
+                                <button data-topic="HR" class="topic-chip bg-indigo-600 text-white">HR</button>
+                                <button data-topic="Production" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300">Production</button>
+                                <button data-topic="Quality Control" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300">Quality Control</button>
+                                <button data-topic="Accounting" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300">Accounting</button>
+                                <button data-topic="Safety" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300">Safety</button>
+                                <button data-topic="Materials Purchasing" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300">Materials Purchasing</button>
+                                <button data-topic="Customer Service" class="topic-chip bg-gray-200 text-gray-700 hover:bg-gray-300">Customer Service</button>
+                            </div>
+                        </div>
+
+                        <div id="custom-phrase-panel" class="tab-panel">
+                             <label for="custom-phrase-input" class="block text-sm font-medium text-gray-700 mb-2">Enter your phrase:</label>
+                             <textarea id="custom-phrase-input" rows="2" class="w-full p-2 border border-gray-300 rounded-md" placeholder="e.g., The quick brown fox jumps over the lazy dog."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button id="get-phrase-btn" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700 flex items-center justify-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
+                            <span id="get-phrase-btn-text">Set Phrase</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Speak the Phrase -->
+                <div id="practice-section" class="hidden mb-6">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-3 text-center">2. Read Aloud</h2>
+                    <div class="bg-indigo-50 p-4 rounded-lg text-center mb-4">
+                        <p class="text-sm font-medium text-indigo-700 mb-1">Your target phrase is:</p>
+                        <p id="target-phrase-display" class="text-xl font-semibold text-gray-900"></p>
+                    </div>
+
+                    <div class="text-center mb-4">
+                        <button id="mic-btn" class="bg-indigo-600 text-white font-bold py-4 px-6 rounded-full shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-transform transform hover:scale-105 disabled:bg-indigo-400 disabled:cursor-not-allowed flex items-center justify-center gap-3 mx-auto">
+                            <span id="mic-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg>
+                            </span>
+                            <span id="mic-btn-text">Start Listening</span>
+                        </button>
+                    </div>
+
+                    <div class="bg-gray-100 p-4 rounded-lg min-h-[80px]">
+                        <p class="text-sm font-medium text-gray-600 mb-1">What we heard:</p>
+                        <p id="transcript-display" class="text-gray-800 italic">...</p>
+                    </div>
+                </div>
+
+                <!-- Step 3: Results -->
+                <div id="results-section" class="hidden text-center p-4 bg-green-50 border-2 border-green-200 rounded-lg">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-3">3. Your Results</h2>
+                    <div class="mb-4">
+                        <p class="text-sm font-medium text-gray-600">Accuracy Score</p>
+                        <p id="score-display" class="text-5xl font-bold text-green-600">0</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Feedback</p>
+                        <p id="feedback-display" class="text-gray-800"></p>
+                    </div>
+                    <button id="try-again-btn" class="mt-4 bg-indigo-500 text-white font-semibold py-2 px-5 rounded-lg hover:bg-indigo-600 transition-colors">Practice Another Phrase</button>
+                </div>
+                 <div id="error-message" class="hidden mt-4 p-4 bg-red-100 text-red-700 border border-red-200 rounded-lg text-center"></div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // --- IMPORTANT ---
+        // Replace this with your actual Cloud Function URL after deployment.
+        // It will look like: https://[REGION]-[PROJECT_ID].cloudfunctions.net/callGeminiApi
+        const CLOUD_FUNCTION_URL = 'YOUR_CLOUD_FUNCTION_URL_HERE'; 
+
+        // --- DOM Elements ---
+        const setupSection = document.getElementById('setup-section');
+        const practiceSection = document.getElementById('practice-section');
+        const resultsSection = document.getElementById('results-section');
+        const getPhraseBtn = document.getElementById('get-phrase-btn');
+        const getPhraseBtnText = document.getElementById('get-phrase-btn-text');
+        const targetPhraseDisplay = document.getElementById('target-phrase-display');
+        const micBtn = document.getElementById('mic-btn');
+        const micBtnText = document.getElementById('mic-btn-text');
+        const transcriptDisplay = document.getElementById('transcript-display');
+        const scoreDisplay = document.getElementById('score-display');
+        const feedbackDisplay = document.getElementById('feedback-display');
+        const tryAgainBtn = document.getElementById('try-again-btn');
+        const errorMessageDiv = document.getElementById('error-message');
+        
+        const tabsContainer = document.getElementById('tabs-container');
+        const topicChipsContainer = document.getElementById('topic-chips');
+        const kohselTopicChipsContainer = document.getElementById('kohsel-topic-chips');
+        const customPhraseInput = document.getElementById('custom-phrase-input');
+
+        // --- App State ---
+        let targetPhrase = '';
+        let mode = 'ai-phrase'; // 'ai-phrase', 'kohsel-phrase', or 'custom-phrase'
+        let selectedTopic = 'Common Greetings';
+        let recognition;
+
+        // --- Speech Recognition Setup ---
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'en-US';
+            recognition.interimResults = true;
+
+            recognition.onstart = () => {
+                micBtn.classList.add('listening', 'bg-red-600', 'hover:bg-red-700');
+                micBtnText.textContent = 'Listening...';
+                transcriptDisplay.textContent = '...';
+                hideError();
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = Array.from(event.results)
+                    .map(result => result[0])
+                    .map(result => result.transcript)
+                    .join('');
+                transcriptDisplay.textContent = transcript;
+            };
+
+            recognition.onerror = (event) => {
+                showError(`Speech recognition error: ${event.error}. Please ensure microphone access is allowed.`);
+                stopListening();
+            };
+
+            recognition.onend = () => {
+                stopListening();
+                if (transcriptDisplay.textContent !== '...') {
+                    getFeedbackAndScore();
+                }
+            };
+
+        } else {
+            showError("Sorry, your browser does not support the Web Speech API. Please try Chrome or Edge.");
+            micBtn.disabled = true;
+            getPhraseBtn.disabled = true;
+        }
+        
+        // --- Functions ---
+        function showError(message) {
+            errorMessageDiv.textContent = message;
+            errorMessageDiv.classList.remove('hidden');
+        }
+
+        function hideError() {
+            errorMessageDiv.classList.add('hidden');
+        }
+
+        function startListening() {
+            if (recognition) {
+                try {
+                    recognition.start();
+                } catch(e) {
+                    console.error("Error starting recognition:", e);
+                    showError("Could not start listening. Please try again.");
+                }
+            }
+        }
+
+        function stopListening() {
+            micBtn.classList.remove('listening', 'bg-red-600', 'hover:bg-red-700');
+            micBtnText.textContent = 'Start Listening';
+        }
+
+        function resetGame() {
+            setupSection.classList.remove('hidden');
+            practiceSection.classList.add('hidden');
+            resultsSection.classList.add('hidden');
+            hideError();
+            targetPhrase = '';
+            transcriptDisplay.textContent = '...';
+            micBtn.disabled = false;
+        }
+
+        // Generic function to call our secure Cloud Function
+        async function callSecureApi(systemPrompt, userQuery) {
+            if (CLOUD_FUNCTION_URL.includes('YOUR_CLOUD_FUNCTION_URL_HERE')) {
+                 throw new Error("The Cloud Function URL is not configured in the script. Please deploy the function and update the URL.");
+            }
+            const response = await fetch(CLOUD_FUNCTION_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ systemPrompt, userQuery })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `API Error: ${response.statusText}`);
+            }
+            return response.json();
+        }
+
+        async function getAiPhrase() {
+            setLoading(getPhraseBtn, getPhraseBtnText, true, 'Generating...');
+            hideError();
+            
+            const systemPrompt = "You are a helpful assistant. Your task is to generate one single, simple, and common English phrase suitable for pronunciation practice.";
+            let userQuery;
+            if (mode === 'kohsel-phrase') {
+                 userQuery = `Generate a professional phrase related to the "${selectedTopic}" department in a manufacturing company. The phrase should be between 5 and 15 words. The difficulty should be easy to intermediate. Only return the phrase itself, with no extra text, labels, or quotation marks.`;
+            } else {
+                 userQuery = `Generate a phrase for the category: "${selectedTopic}". The phrase should be between 5 and 15 words. The difficulty should be easy to intermediate. Only return the phrase itself, with no extra text, labels, or quotation marks.`;
+            }
+            
+            try {
+                const result = await callSecureApi(systemPrompt, userQuery);
+                const phrase = result.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+                if (phrase) {
+                    setTargetPhrase(phrase);
+                } else {
+                    throw new Error("Could not generate a phrase. The API returned an empty response.");
+                }
+
+            } catch (error) {
+                console.error("AI Phrase Generation Error:", error);
+                showError(`Failed to get AI phrase: ${error.message}`);
+            } finally {
+                setLoading(getPhraseBtn, getPhraseBtnText, false, 'Set Phrase');
+            }
+        }
+        
+        function setTargetPhrase(phrase) {
+            targetPhrase = phrase.replace(/["'.]/g, '');
+            targetPhraseDisplay.textContent = `“${targetPhrase}”`;
+            setupSection.classList.add('hidden');
+            practiceSection.classList.remove('hidden');
+            resultsSection.classList.add('hidden');
+            micBtn.disabled = false;
+            transcriptDisplay.textContent = '...';
+        }
+
+        async function getFeedbackAndScore() {
+            const userSpeech = transcriptDisplay.textContent;
+            if (!userSpeech || userSpeech === '...') {
+                showError("We didn't hear anything. Please try speaking again.");
+                return;
+            }
+            
+            micBtn.disabled = true;
+            
+            const systemPrompt = `You are a friendly and encouraging English pronunciation coach. The user was given a target phrase to say. You will receive the target phrase and what the user actually said (the transcript). Your task is to:
+1. Compare the transcript to the target phrase.
+2. Provide a short (1-2 sentences), encouraging, and helpful feedback comment. If there are clear mispronunciations, gently point them out.
+3. On a new line, provide a numerical accuracy score from 0 to 100 based on how closely the transcript matches the target phrase.
+
+Your entire response MUST be in this format:
+[Your feedback comment here.]
+[Score]
+
+Example:
+Great attempt! You're very close. It looks like you might have stumbled on the word 'jumps'. Keep practicing!
+95`;
+
+            const userQuery = `Target Phrase: "${targetPhrase}"\nUser's Speech: "${userSpeech}"`;
+
+            try {
+                const result = await callSecureApi(systemPrompt, userQuery);
+                const fullText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                
+                if (fullText) {
+                    const parts = fullText.trim().split('\n');
+                    const feedback = parts.slice(0, -1).join('\n').trim();
+                    const score = parseInt(parts[parts.length - 1], 10);
+
+                    if (feedback && !isNaN(score)) {
+                         displayResults(score, feedback);
+                    } else {
+                         throw new Error("The API returned an invalid format.");
+                    }
+                } else {
+                    throw new Error("The API returned an empty response.");
+                }
+
+            } catch(error) {
+                console.error("Feedback Generation Error:", error);
+                showError(`Failed to get feedback: ${error.message}. Calculating a simple score instead.`);
+                calculateSimpleScore(targetPhrase, userSpeech);
+            }
+        }
+
+        function calculateSimpleScore(target, actual) {
+            const cleanTarget = target.toLowerCase().replace(/[^\w\s]/g, '').split(' ');
+            const cleanActual = actual.toLowerCase().replace(/[^\w\s]/g, '').split(' ');
+            
+            let matches = 0;
+            cleanTarget.forEach(word => {
+                if (cleanActual.includes(word)) {
+                    matches++;
+                }
+            });
+            
+            const score = Math.round((matches / cleanTarget.length) * 100);
+            displayResults(score, "Couldn't get detailed feedback, but here is a basic score based on matching words.");
+        }
+
+        function displayResults(score, feedback) {
+            scoreDisplay.textContent = score;
+            feedbackDisplay.textContent = feedback;
+            practiceSection.classList.add('hidden');
+            resultsSection.classList.remove('hidden');
+        }
+
+        function setLoading(btn, btnTextEl, isLoading, loadingText) {
+            if (isLoading) {
+                btn.disabled = true;
+                btnTextEl.innerHTML = `<span class="loader"></span> ${loadingText}`;
+            } else {
+                btn.disabled = false;
+                btnTextEl.innerHTML = btnTextEl.parentElement.querySelector('svg').outerHTML + `<span>${loadingText || 'Set Phrase'}</span>`;
+            }
+        }
+        
+        // --- Event Listeners ---
+        micBtn.addEventListener('click', () => {
+            if (micBtn.classList.contains('listening')) {
+                recognition.stop();
+            } else {
+                startListening();
+            }
+        });
+
+        getPhraseBtn.addEventListener('click', () => {
+            hideError();
+            if (mode === 'custom-phrase') {
+                const customPhrase = customPhraseInput.value.trim();
+                if (customPhrase) {
+                    setTargetPhrase(customPhrase);
+                } else {
+                    showError("Please enter a phrase to practice.");
+                }
+            } else {
+                getAiPhrase();
+            }
+        });
+        
+        tryAgainBtn.addEventListener('click', resetGame);
+        
+        tabsContainer.addEventListener('click', (e) => {
+            if (e.target.dataset.tab) {
+                mode = e.target.dataset.tab;
+                tabsContainer.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+                document.getElementById(`${mode}-panel`).classList.add('active');
+
+                // Update selected topic based on the active tab
+                if (mode === 'ai-phrase') {
+                    selectedTopic = topicChipsContainer.querySelector('.bg-indigo-600').dataset.topic;
+                } else if (mode === 'kohsel-phrase') {
+                    selectedTopic = kohselTopicChipsContainer.querySelector('.bg-indigo-600').dataset.topic;
+                }
+            }
+        });
+        
+        function handleChipClick(container, event) {
+            if (event.target.dataset.topic) {
+                container.querySelectorAll('.topic-chip').forEach(chip => {
+                    chip.classList.remove('bg-indigo-600', 'text-white');
+                    chip.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+                });
+                event.target.classList.add('bg-indigo-600', 'text-white');
+                event.target.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+                selectedTopic = event.target.dataset.topic;
+            }
+        }
+
+        topicChipsContainer.addEventListener('click', (event) => handleChipClick(topicChipsContainer, event));
+        kohselTopicChipsContainer.addEventListener('click', (event) => handleChipClick(kohselTopicChipsContainer, event));
+        
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful');
+                }).catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
