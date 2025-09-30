@@ -189,7 +189,7 @@
 
     <script>
         // --- IMPORTANT: PASTE YOUR WORKING, GRANDFATHERED GEMINI API KEY HERE ---
-        const GEMINI_API_KEY = 'PASTE_YOUR_WORKING_API_KEY_HERE';
+        const GEMINI_API_KEY = 'AIzaSyC4dKsNlLWyxNkPM3dEwn-F75LGhivBjQU';
         // --------------------------------------------------------------------
 
         // DOM Elements
@@ -522,7 +522,7 @@
             accuracyScoreP.textContent = '...';
             feedbackP.textContent = 'Analyzing...';
             
-            if (GEMINI_API_KEY.includes(AIzaSyC4dKsNlLWyxNkPM3dEwn-F75LGhivBjQU)) {
+            if (GEMINI_API_KEY.includes('PASTE_YOUR_WORKING_API_KEY_HERE')) {
                 showError("Cannot provide feedback without a Gemini API Key.");
                 feedbackP.textContent = "Feedback unavailable.";
                 const targetWords = target.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/).filter(Boolean);
@@ -587,4 +587,3 @@
     </script>
 </body>
 </html>
-
